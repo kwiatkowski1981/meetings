@@ -1,16 +1,45 @@
-# This is a sample Python script.
+from json import load, dump
+from datetime import datetime
+from meetings.Meeting import Meeting
+from meetings.Calendar import Calendar
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+calendar = Calendar()
+
+with open('meetings.json', 'r') as file:
+    data = load(file)
+    for item in data:
+        meeting = Meeting(
+            datetime.strptime(item['date'], '%d.%m.%Y %H:%M'),
+            item['title']
+        )
+        calendar.add_meeting(meeting)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    while True:
+        option = input('Wybierz opcję: [l] - lista, [d] - dodaj, [q] - quit: ')
+        if option == 'l':
+            for _, meeting in calendar.meetings.items():
+                print(f"{meeting.date}: {meeting.title}")
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+        elif option == 'd':
+            title = input("Nazwa spotkania: ")
+            date = input("Data spotkania dd.mm.rrrr h:m: ")
+            meeting_date = datetime.strptime(date, '%d.%m.%Y %H:%M')
+            calendar.add_meeting(Meeting(meeting_date, title))
+
+            with open('meetings.json', 'w') as file:
+                data = []
+                for meeting in calendar.meetings.values():
+                    data.append({
+                        'title': meeting.title,
+                        'date': meeting.date.strftime('%d.%m.%Y %H:%M')
+                    })
+                dump(data, file)
+
+        elif option == 'q':
+            break
+
+        else:
+            print("Nie ma taiej opcji")
+
