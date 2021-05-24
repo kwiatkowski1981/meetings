@@ -18,3 +18,7 @@ class Calendar:
         while not self.is_available(meeting_date):
             meeting_date += timedelta(minutes=60)
         return meeting_date
+
+# TODO 1- dodac funkcje w menu glownym sprawdzanie dostepnosci nastepnego wolnego terminu
+# TODO 2- sprawdzenie czy konkretna godzina jest dostepna
+# TODO metody sa juz napisane powyzej, tylko dodac opcje do menu glownego w klasie main.py
